@@ -80,7 +80,7 @@ WITH PopvsVac (Continent, Location, Date, Population, New_Vaccinations, RollingP
 AS
 (
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations, 
-       SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+       SUM(CONVERT(bigint,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
 FROM CovidDeaths dea
 JOIN CovidVaccinations vac
 	ON dea.location = vac.location
@@ -106,7 +106,7 @@ RollingPeopleVaccinated numeric
 
 INSERT INTO #PercentPopulationVaccinated
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations,
-       SUM(cast(vac.new_vaccinations as int)) OVER (Partition by dea.Location Order by dea.location, dea.Date) AS RollingPeopleVaccinated
+       SUM(cast(vac.new_vaccinations as bigint)) OVER (Partition by dea.Location Order by dea.location, dea.Date) AS RollingPeopleVaccinated
 FROM CovidDeaths dea
 JOIN CovidVaccinations vac
 	ON dea.location = vac.location
